@@ -8,21 +8,28 @@ namespace StartAcademy7.BLogic
         #region Public Methods
         internal static void ShowMenu()
         {
-            
             string menuDescription = "Benvenuto nel menu principale!";
 
             Console.WriteLine("Inizio academy!");
             Console.Write("Inserire nominativo: ");
-            string? msg = Console.ReadLine()?.Trim(); // Rimuove eventuali spazi vuoti
 
-            if (!string.IsNullOrWhiteSpace(msg))
+            try
             {
-                Console.Clear(); // Pulisce la console prima di mostrare il menu
-                WriteMenu(menuDescription, msg);
+                string? msg = Console.ReadLine()?.Trim();
+
+                if (!string.IsNullOrWhiteSpace(msg))
+                {
+                    Console.Clear();
+                    WriteMenu(menuDescription, msg);
+                }
+                else
+                {
+                    Console.WriteLine("⚠ Nominativo non inserito. Riprova.");
+                }
             }
-            else
+            catch (IOException ioException)
             {
-                Console.WriteLine("⚠ Nominativo non inserito. Riprova.");
+                Console.WriteLine($"❌ Errore di input/output: {ioException.Message}");
             }
         }
         #endregion
