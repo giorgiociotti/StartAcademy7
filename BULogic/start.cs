@@ -1,55 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace StartAcademy7.BLogic
 {
     internal static class Start
     {
-        #region Private Variables
-        #endregion
-
         #region Public Methods
         internal static void ShowMenu()
         {
-            string? menuDescription = "Benvenuto nel menu principale!";
+            
+            string menuDescription = "Benvenuto nel menu principale!";
+
             Console.WriteLine("Inizio academy!");
             Console.Write("Inserire nominativo: ");
-            string? msg = Console.ReadLine();
+            string? msg = Console.ReadLine()?.Trim(); // Rimuove eventuali spazi vuoti
 
-            if (msg != null && msg.Length>0)
+            if (!string.IsNullOrWhiteSpace(msg))
             {
+                Console.Clear(); // Pulisce la console prima di mostrare il menu
                 WriteMenu(menuDescription, msg);
             }
             else
             {
-                Console.WriteLine("Nominativo non inserito");
+                Console.WriteLine("⚠ Nominativo non inserito. Riprova.");
             }
-
-
         }
         #endregion
 
         #region Private Methods
         /// <summary>
-        /// It write the main menu on console
+        /// Scrive il menu principale nella console.
         /// </summary>
-        /// <param name="menuDescription"></param>
-        /// <param name="msg"></param>
-        static void WriteMenu(string menuDescription, string msg)//Senza specificare sarà private
+        /// <param name="menuDescription">Descrizione del menu</param>
+        /// <param name="msg">Nome dell'utente</param>
+        private static void WriteMenu(string menuDescription, string msg)
         {
-            Console.WriteLine($"Benvenuto, caro: {msg.ToUpper()}");
-            Console.Clear();
-            Console.WriteLine(new string('-', menuDescription.Length - 1));
+            Console.WriteLine($"Benvenuto, {msg.ToUpper()}!");
+            Console.WriteLine(new string('-', menuDescription.Length));
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(menuDescription);
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(new string('-', menuDescription.Length - 1));
-            Console.WriteLine();
+            Console.WriteLine(new string('-', menuDescription.Length));
+            Console.WriteLine("\nPremi INVIO per continuare...");
             Console.ReadLine();
         }
         #endregion
-    }
+    }
 }
