@@ -110,6 +110,8 @@ namespace StartAcademy7.BLogic
 
             Console.WriteLine("Esecuzione DoWhileIteration");
             iterations.DoWhileIteration();
+            Console.Clear();
+
         }
         #endregion
     }
