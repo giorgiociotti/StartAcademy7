@@ -75,6 +75,11 @@ namespace StartAcademy7.BLogic
                         Console.Clear();
                         DemoIterations();
                         break;
+                    
+                    case "B":
+                        Console.Clear();
+                        DemoArrayAndList();
+                        break;
 
                     case "X":
                         running = false;
