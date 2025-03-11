@@ -6,13 +6,13 @@
         string[]? stringsName;
         bool isOK = true;
 
-        public Iterations(int LoopNumber)
-        {
+        public Iterations(int LoopNumber) 
+        { 
             loopNumber = LoopNumber;
         }
 
         public Iterations(int LoopNumber, string[] StringsName)
-        {
+        { 
             loopNumber = LoopNumber;
             stringsName = new string[StringsName.Length];
             stringsName = StringsName;
@@ -25,8 +25,8 @@
         public void ForIteration()
         {
             for (int i = 0; i < loopNumber; i++)
-            {
-                Console.WriteLine($"Valore ciclo for (i): {i}");
+            { 
+                Console.WriteLine($"Valore ciclo for (i): {i}"); 
             }
 
             for (int i = 0; i < stringsName.Length; i++)
@@ -37,7 +37,7 @@
 
         public void ForEachIteration()
         {
-            foreach (string name in stringsName)
+            foreach(string name in stringsName)
             {
                 Console.WriteLine($"Valore array stringhe: {name}");
             }
@@ -50,8 +50,8 @@
             {
                 Console.Write($"scrivi qualcosa (fine per uscire dal while)");
                 inputText = Console.ReadLine();
-                isOK = inputText.ToLower() != "fine" ? true : false;
-            }
+                isOK = inputText.ToLower() != "fine"? true : false;
+            } 
         }
 
         public void DoWhileIteration()

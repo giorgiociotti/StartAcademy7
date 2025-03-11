@@ -14,23 +14,22 @@ namespace StartAcademy7.BLogic
         private string[] stringsArrayValues = { "UNO", "DUE", "TRE" };
 
         private List<int> numbersList = [];
-
-        internal ArrayAndList()
-        {
+        
+        internal ArrayAndList() {
 
             numbersArray[0] = 1;
 
             for (int i = 1; i < numbersArray.Length; i++)
             {
-                numbersArray[i] = i + 1;
+                numbersArray[i] = i+1;
             }
 
-            for (int j = 0; j < 5; j++)
+            for (int j=0; j< 5;j++)
             {
                 stringsArray[j] = $"Stringa: {j.ToString()}";
             }
 
-            for (int k = 0; k <= 100; k += 10)
+            for(int k=0;k <=100; k+=10)
             {
                 numbersList.Add(k);
             }
@@ -39,8 +38,8 @@ namespace StartAcademy7.BLogic
         internal void PrintArrays()
         {
             Console.WriteLine("STAMPA ARRAYS NUMERI CARICATI CON CICLO FOR");
-
-            foreach (int i in numbersArray)
+           
+            foreach(int i in numbersArray)
             {
                 Console.WriteLine(i);
             }
@@ -55,22 +54,22 @@ namespace StartAcademy7.BLogic
             // Stampare i numeri divisibile per 5
             // stampare anche il risultato
 
-            for (int i = 0; i < numbersArrayValues.Length; i++)
+            for (int i = 0;i < numbersArrayValues.Length; i++)
             {
                 if (numbersArrayValues[i] % 5 == 0)
                 {
-                    Console.WriteLine($"Numero: {numbersArrayValues[i]} - Risultato: {numbersArrayValues[i] / 5}");
+                    Console.WriteLine($"Numero: {numbersArrayValues[i]} - Risultato: {numbersArrayValues[i]/5}");
                 }
             }
 
             float numbersSum = 0;
 
-            foreach (float item in numbersArrayValues)
+            foreach(float item in numbersArrayValues)
             {
                 numbersSum += item;
             }
 
-            float numbersAverage = numbersSum / numbersArrayValues.Length;
+            float numbersAverage =numbersSum / numbersArrayValues.Length;
             Console.WriteLine($"Media della collezione numbersArrayValues: {numbersAverage}");
         }
 
@@ -89,10 +88,10 @@ namespace StartAcademy7.BLogic
             string lordOfRing = "Il signore degli anelli";
             Console.WriteLine(lordOfRing.Contains("ANELLi", StringComparison.OrdinalIgnoreCase));
             Console.WriteLine(lordOfRing.IndexOf("degli"));
-            Console.WriteLine(lordOfRing.Substring(lordOfRing.IndexOf("Il ") + 3));
+            Console.WriteLine(lordOfRing.Substring(lordOfRing.IndexOf("Il ")+3));
 
             string[] ringsWords = lordOfRing.Split(' ');
         }
-
+       
     }
 }

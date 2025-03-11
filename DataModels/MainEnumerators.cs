@@ -10,16 +10,16 @@ namespace StartAcademy7.DataModels
     {
         internal enum MenuItems
         {
-            DemoIterations = 1,
-            DemoArrayList = 2,
+            DemoIterations=1,
+            DemoArrayList=2,
             EnumsTest,
-            EmployeesHandler = 8,
-            ExitProgram = 9
+            EmployeesHandler=8,
+            ExitProgram=9
         }
 
         internal enum CarEngine
         {
-            Fuel = 1,
+            Fuel= 1,
             Hybrid,
             Diesel,
             FullHybrid,
