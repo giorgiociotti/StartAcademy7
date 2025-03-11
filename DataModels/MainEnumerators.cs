@@ -25,5 +25,11 @@ namespace StartAcademy7.DataModels
             FullHybrid,
             Plugin
         }
+        public enum GenderType
+        {
+            Male = 1,
+            Female = 2,
+            Other = 3
+        }
     }
 }
