@@ -54,7 +54,9 @@ namespace StartAcademy7.BLogic
                 Console.WriteLine("8) Gestione Dipendenti");
                 Console.WriteLine("9) Chiusura e Uscita Applicazione");
                 Console.Write("Inserire la lettera per la funzione desiderata: ");
-                    
+
+                EmployeeManager empMan = new();
+
                 //menuChoice = Console.ReadLine();
                 bool resultChoice = int.TryParse(Console.ReadLine(), out int mnuItem);
 
@@ -72,7 +74,7 @@ namespace StartAcademy7.BLogic
                             DemoEnums();
                             break;
                         case MainEnumerators.MenuItems.EmployeesHandler:
-                            EmployeesHandler();
+                            empMan.ShowEmployeeMenu();
                             break;
                         case MainEnumerators.MenuItems.ExitProgram:
                             break;

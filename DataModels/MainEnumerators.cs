@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StartAcademy7.DataModels
 {
-    internal class MainEnumerators
+    public class MainEnumerators
     {
         internal enum MenuItems
         {

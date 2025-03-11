@@ -9,11 +9,11 @@ namespace StartAcademy7.DataModels
     public class Employee
     {
         protected List<Employee> Employees = [];
-
+        
         public string Enrollement { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Surname { get; set; }
-        public int Gender { get; set; }
+        public MainEnumerators.GenderType Gender { get; set; }
         public string City { get; set; } = string.Empty;
         public int Age { get; set; }
 
@@ -26,7 +26,7 @@ namespace StartAcademy7.DataModels
             Age = 0;
         }
 
-        public Employee(string enrollment, string name,int gender,string city, string surname, int age)
+        public Employee(string enrollment, string name, MainEnumerators.GenderType gender,string city, string surname, int age)
         {
             Enrollement = enrollment;
             Name = name;
