@@ -462,5 +462,90 @@ namespace StartAcademy7.BLogic
             }
         }
 
+        //cancella un elemento di weekwork
+        public void DeleteWeekWork(Weekwork weekwor)
+        {
+            bool result = false;
+            string spResult = string.Empty;
+            try
+            {
+                CheckDbOpen();
+
+                _command = new SqlCommand
+                {
+                    CommandText = "DELETE FROM [Weekwork] WHERE EnrollmentFather = @EnrollmentFather AND WorkDate = @WorkDate",
+                    Connection = _connection
+                };
+
+                _command.Parameters.AddWithValue("@EnrollmentFather", weekwor.EnrollementFather);
+                _command.Parameters.AddWithValue("@WorkDate", weekwor.WorkDate);
+
+                _command.ExecuteNonQuery();
+                spResult = "Cancellazione Weekwork RIUSCITO";
+                result = true;
+            }
+            catch (SqlException sqlEx)
+            {
+                spResult = "Errore SQL: " + sqlEx.Message;
+                Console.WriteLine(spResult);
+            }
+            catch (Exception ex)
+            {
+                spResult = "Errore generico: " + ex.Message;
+                Console.WriteLine(spResult);
+            }
+            finally
+            {
+                CheckDbClose();
+            }
+            Console.WriteLine(spResult);
+        }
+
+        //updateWeekwork
+        public string UpdateWeekWork(int id,string enrollementFather, string? workDate=null, string? activity=null)
+        {
+            string spResult = string.Empty;
+            bool result = false;
+            try
+            {
+                CheckDbOpen();
+
+                _command = new SqlCommand
+                {
+                    CommandText = "dbo.spUpdateWeekwork",
+                    CommandType = CommandType.StoredProcedure,
+                    Connection = _connection
+                };
+                _command.Parameters.AddWithValue("@ID", id);
+                _command.Parameters.AddWithValue("@EnrollmentFather", enrollementFather);
+                _command.Parameters.AddWithValue("@WorkDate", workDate);
+                _command.Parameters.AddWithValue("@Activity", activity);
+                _command.Parameters.Add(new SqlParameter("@Result", SqlDbType.NVarChar, 200)).Direction = ParameterDirection.Output;
+
+                _command.ExecuteNonQuery();
+                spResult = _command.Parameters["@Result"].Value.ToString();
+
+                if (string.IsNullOrEmpty(spResult))
+                    spResult = "Update Weekwork RIUSCITO";
+
+                result = !string.IsNullOrEmpty(spResult);
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Errore SQL: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Errore generico: " + ex.Message);
+            }
+            finally
+            {
+                CheckDbClose();
+            }
+            return spResult;
+        }
+
+
+
     }
 }

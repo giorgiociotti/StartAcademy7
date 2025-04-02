@@ -216,8 +216,11 @@ namespace StartAcademy7
 
             //DA QUI ESERCIZIO DATABASE
             //employeesHandler.Workers
-            if (dbManager.IsDbOnline)
-                dbManager.PopulateAcademy7Tables(employeesHandler.Workers);
+            if (dbManager.IsDbOnline) { 
+                //dbManager.PopulateAcademy7Tables(employeesHandler.Workers);
+                dbManager.UpdateWeekWork(5, "I001", "2025-04-02", "aaaaaaaa");
+
+            }
 
 
 
