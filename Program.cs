@@ -19,39 +19,42 @@ namespace StartAcademy7
             AppUtility.GetSetApplicationParams();
 
             DbManager dbManager = new(ConfigParams.SqlDbConnection);
-            if (dbManager.IsDbOnline)
-            {
-                //dbManager.GetWorkers().ForEach(w => Console.WriteLine($"Nominativo: {w.FullName}"));
-                //dbManager.GetWorkersByFullName("Rossi").ForEach(w => Console.WriteLine($"Matricola per nominativo: {w.Matricola}"));
-                //Console.WriteLine($"Numero totale dei dipententi: {dbManager.GetTotalWorkers()}");
+            //if (dbManager.IsDbOnline)
+            //{
+            //    //dbManager.GetWorkers().ForEach(w => Console.WriteLine($"Nominativo: {w.FullName}"));
+            //    //dbManager.GetWorkersByFullName("Rossi").ForEach(w => Console.WriteLine($"Matricola per nominativo: {w.Matricola}"));
+            //    //Console.WriteLine($"Numero totale dei dipententi: {dbManager.GetTotalWorkers()}");
 
-                //Console.WriteLine(new string('-', 120));
-                //Console.WriteLine($"\nMatricola ottenuta da Stored Procedure, cercando Mario Rossi: {dbManager.GetSPWorkersByFullName("Mario Rossi")}");
-                //dbManager.spGetEmployeesByName().ForEach(worker => 
-                //    Console.WriteLine($"Esecuzione SP spGetEmployeesByName: {worker.Matricola} - {worker.FullName} - {worker.Role}"));
-                //Console.WriteLine(new string('-', 120));
+            //    //Console.WriteLine(new string('-', 120));
+            //    //Console.WriteLine($"\nMatricola ottenuta da Stored Procedure, cercando Mario Rossi: {dbManager.GetSPWorkersByFullName("Mario Rossi")}");
+            //    //dbManager.spGetEmployeesByName().ForEach(worker => 
+            //    //    Console.WriteLine($"Esecuzione SP spGetEmployeesByName: {worker.Matricola} - {worker.FullName} - {worker.Role}"));
+            //    //Console.WriteLine(new string('-', 120));
 
-                //dbManager.spGetEmployeesByName("Rossi","Impiegato").ForEach(worker =>
-                //    Console.WriteLine($"Esecuzione SP spGetEmployeesByName CON PARAMETRI: {worker.Matricola} - {worker.FullName} - {worker.Role}"));
+            //    //dbManager.spGetEmployeesByName("Rossi","Impiegato").ForEach(worker =>
+            //    //    Console.WriteLine($"Esecuzione SP spGetEmployeesByName CON PARAMETRI: {worker.Matricola} - {worker.FullName} - {worker.Role}"));
 
-                Worker worker = new()
-                {
-                    Matricola = "Z892",
-                    FullName = "Harry Potter",
-                    Role = "Young Wizard",
-                    Department = "Hogwards"
-                };
-                Console.WriteLine(dbManager.spInsertWorker(worker));
+            //    Worker worker = new()
+            //    {
+            //        Matricola = "Z192",
+            //        FullName = "Harry Potter",
+            //        Role = "Young Wizard",
+            //        Department = "Hogwards"
+            //    };
+            //    Console.WriteLine(dbManager.spInsertWorker(worker));
 
-                Console.WriteLine(dbManager.UpdateWorker("I001", "Vendite"));
-            }
-            else
-            {
-                Console.WriteLine("Database non raggiungibile, applicazione terminata");
-                return;
-            }
+            //    Console.WriteLine(dbManager.UpdateWorker("I001", "Vendite"));
 
-                return;
+            //    Console.WriteLine(dbManager.DeleteDbWorker("F022"));
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Database non raggiungibile, applicazione terminata");
+            //    return;
+            //}
+
+
+
 
             //MSSqlServerSinkOptions sSqlServerSinkOptions = new MSSqlServerSinkOptions
             //{
@@ -101,27 +104,27 @@ namespace StartAcademy7
             //circle.ComputeArea();
             //circle.GetRadius(3.4);
 
-            CarAuto carAuto = new();
-           
-            carAuto.Brand = "BMW";
-            carAuto.Model = "X6";
-            carAuto.CarEngine = MainEnumerators.CarEngine.Hybrid;
-            carAuto.BasePrice = 50000m;
-            Console.WriteLine(carAuto.FinalPrice());
+            //CarAuto carAuto = new();
 
-            CarBenzina carBenzina = new();
-            carBenzina.Brand = "Mercedes";
-            carBenzina.Model = "C200";
-            carBenzina.BasePrice = 44000m;
-            carBenzina.CarEngine = MainEnumerators.CarEngine.Fuel;
-            Console.WriteLine(carBenzina.FinalPrice());
-            
-            CarElettrica carElettrica = new();
-            carElettrica.BasePrice = 40000m;
-            carElettrica.CarEngine = MainEnumerators.CarEngine.Electric;
-            Console.WriteLine(carElettrica.FinalPrice());
+            //carAuto.Brand = "BMW";
+            //carAuto.Model = "X6";
+            //carAuto.CarEngine = MainEnumerators.CarEngine.Hybrid;
+            //carAuto.BasePrice = 50000m;
+            //Console.WriteLine(carAuto.FinalPrice());
 
-            
+            //CarBenzina carBenzina = new();
+            //carBenzina.Brand = "Mercedes";
+            //carBenzina.Model = "C200";
+            //carBenzina.BasePrice = 44000m;
+            //carBenzina.CarEngine = MainEnumerators.CarEngine.Fuel;
+            //Console.WriteLine(carBenzina.FinalPrice());
+
+            //CarElettrica carElettrica = new();
+            //carElettrica.BasePrice = 40000m;
+            //carElettrica.CarEngine = MainEnumerators.CarEngine.Electric;
+            //Console.WriteLine(carElettrica.FinalPrice());
+
+
             //Singleton singleton = Singleton.Instance;
             //singleton.Msg();
             //Singleton singleton2 = Singleton.Instance;
@@ -203,12 +206,21 @@ namespace StartAcademy7
             employeesHandler.ReadWorkers();
             //employeesHandler.LinqDemo();
             //employeesHandler.Sha256Encryption("Orloff");
-            KeyValuePair<string, string> keyValuePair = employeesHandler.SaltEncryption("Orloff");
+            //KeyValuePair<string, string> keyValuePair = employeesHandler.SaltEncryption("Orloff");
 
             //Console.WriteLine($"HASH: {keyValuePair.Key} - SALT: {keyValuePair.Value}");
             //employeesHandler.EmployeesStatistics();
             //Console.Write("Aspetto un tuo comando, mio signore, per chiuder: ");
             //Console.ReadLine();
+
+
+            //DA QUI ESERCIZIO DATABASE
+            //employeesHandler.Workers
+            if (dbManager.IsDbOnline)
+                dbManager.PopulateAcademy7Tables(employeesHandler.Workers);
+
+
+
 
         }
     }

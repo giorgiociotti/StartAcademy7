@@ -109,12 +109,12 @@ namespace StartAcademy7.BLogic
                     EmployeesString.Add(e.EmployeeValues());
                 }
 
-                File.WriteAllLines("C:\\Temp\\EMployees.txt", EmployeesString);
+                File.WriteAllLines("C:\\Users\\Giorgio\\OneDrive\\Desktop\\BETACOM\\EMployees.txt", EmployeesString);
                 // ****************************************************************
 
                 // write txt file (csv) with Streamwriter .NET Class
 
-                //StreamWriter streamWriter = new ("C:\\Temp\\EMployees2.txt");
+                //StreamWriter streamWriter = new ("C:\Users\Giorgio\OneDrive\Desktop\BETACOM\\EMployees2.txt");
 
                 //foreach (Employee e in Employees)
                 //    streamWriter.WriteLine(e.EmployeeValues());
@@ -143,8 +143,8 @@ namespace StartAcademy7.BLogic
             try
             {
                 // Read txt file by File.ReadAllLines
-                string[] stringsWorkers = File.ReadAllLines("C:\\Temp\\EMployees.txt");  // NO HARDCODED
-                string[] daysWork = File.ReadAllLines("C:\\Temp\\Calendars.txt");
+                string[] stringsWorkers = File.ReadAllLines("C:\\Users\\Giorgio\\OneDrive\\Desktop\\BETACOM\\EMployees.txt");  // NO HARDCODED
+                string[] daysWork = File.ReadAllLines("C:\\Users\\Giorgio\\OneDrive\\Desktop\\BETACOM\\Calendars.txt");
                 Workers.Clear();
 
                 foreach (string se in stringsWorkers)
@@ -184,7 +184,7 @@ namespace StartAcademy7.BLogic
             try
             {
                 // Read txt file by File.ReadAllLines
-                string[] stringsEMployees = File.ReadAllLines("C:\\Temp\\EMployees.txt");  // NO HARDCODED
+                string[] stringsEMployees = File.ReadAllLines("C:\\Users\\Giorgio\\OneDrive\\Desktop\\BETACOM\\EMployees.txt");  // NO HARDCODED
                 Employees.Clear();
 
                 foreach (string se in stringsEMployees)
@@ -204,7 +204,7 @@ namespace StartAcademy7.BLogic
                 //****************************************************************
                 // Read  txt file by Streamreader
 
-                //using (StreamReader streamReader = new("C:\\Temp\\EMployees2.txt"))
+                //using (StreamReader streamReader = new("C:\Users\Giorgio\OneDrive\Desktop\BETACOM\\EMployees2.txt"))
                 //{
                 //    string row;
                 //    while ((row = streamReader.ReadLine()) != null)

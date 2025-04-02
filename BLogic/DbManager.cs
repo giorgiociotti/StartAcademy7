@@ -10,6 +10,7 @@ namespace StartAcademy7.BLogic
         private SqlCommand _command;
         public bool IsDbOnline = false;
         public DbManager(string connectionString)
+
         {
             try
             {
@@ -24,7 +25,7 @@ namespace StartAcademy7.BLogic
             }
             finally
             {
-                if(_connection.State == ConnectionState.Open)
+                if (_connection.State == ConnectionState.Open)
                     _connection.Close();
             }
 
@@ -47,7 +48,7 @@ namespace StartAcademy7.BLogic
                         FullName = dataReader[1].ToString(),
                         Role = dataReader["Role"].ToString(),
                         Department = dataReader["Department"].ToString(),
-                        Age = string.IsNullOrEmpty(dataReader["Age"].ToString()) ? 0: Convert.ToInt16(dataReader["Age"]),
+                        Age = string.IsNullOrEmpty(dataReader["Age"].ToString()) ? 0 : Convert.ToInt16(dataReader["Age"]),
                         Address = dataReader["Address"].ToString(),
                         City = dataReader["City"].ToString(),
                         Province = dataReader["Province"].ToString(),
@@ -78,7 +79,7 @@ namespace StartAcademy7.BLogic
                 if (_connection.State == ConnectionState.Closed)
                     _connection.Open();
                 _command = new SqlCommand("SELECT * FROM [AcademyNet7].[dbo].[Worker] WHERE FullName LIKE @FullName", _connection);
-                _command.Parameters.AddWithValue("@FullName", "%"+FullName+"%");
+                _command.Parameters.AddWithValue("@FullName", "%" + FullName + "%");
                 SqlDataReader dataReader = _command.ExecuteReader();
                 while (dataReader.Read())
                 {
@@ -119,7 +120,7 @@ namespace StartAcademy7.BLogic
                 if (_connection.State == ConnectionState.Closed)
                     _connection.Open();
                 _command = new SqlCommand("SELECT COUNT(*) AS TotaleDipendenti FROM [AcademyNet7].[dbo].[Worker]", _connection);
-                totalWorkers = (int)_command.ExecuteScalar();                
+                totalWorkers = (int)_command.ExecuteScalar();
             }
             catch (Exception ex)
             {
@@ -142,11 +143,11 @@ namespace StartAcademy7.BLogic
                     _connection.Open();
                 _command = new SqlCommand("spGetMatricolaByFullname", _connection);
                 _command.CommandType = CommandType.StoredProcedure;
-                _command.Parameters.AddWithValue("@EmployeeName",FullName);
-                _command.Parameters.Add(new SqlParameter("@Matricola",SqlDbType.NChar,4)).Direction = ParameterDirection.Output ;
+                _command.Parameters.AddWithValue("@EmployeeName", FullName);
+                _command.Parameters.Add(new SqlParameter("@Matricola", SqlDbType.NChar, 4)).Direction = ParameterDirection.Output;
                 _command.ExecuteNonQuery();
                 matricola = _command.Parameters["@Matricola"].Value.ToString();
-                
+
             }
             catch (Exception ex)
             {
@@ -157,11 +158,11 @@ namespace StartAcademy7.BLogic
                 if (_connection.State == ConnectionState.Open)
                     _connection.Close();
             }
-            
+
             return matricola;
         }
 
-        public List<Worker> spGetEmployeesByName(string P1="", string Role = "")
+        public List<Worker> spGetEmployeesByName(string P1 = "", string Role = "")
         {
             List<Worker> workers = [];
             try
@@ -215,9 +216,10 @@ namespace StartAcademy7.BLogic
                 _connection.Open();
         }
 
-        public bool spInsertWorker(Worker worker)
+        public string spInsertWorker(Worker worker)
         {
             bool result = false;
+            string spResult = string.Empty;
             try
             {
                 CheckDbOpen();
@@ -229,27 +231,80 @@ namespace StartAcademy7.BLogic
                     Connection = _connection
                 };
 
-                _command.Parameters.AddWithValue("@Matricola",worker.Matricola);
+                _command.Parameters.AddWithValue("@Matricola", worker.Matricola);
                 _command.Parameters.AddWithValue("@FullName", worker.FullName);
-                _command.Parameters.AddWithValue("@Role",worker.Role);
+                _command.Parameters.AddWithValue("@Role", worker.Role);
                 _command.Parameters.AddWithValue("@Department", worker.Department);
+                _command.Parameters.Add(new SqlParameter("@Result", SqlDbType.NVarChar, 200)).Direction =
+                    ParameterDirection.Output;
 
                 _command.ExecuteNonQuery();
+                spResult = _command.Parameters["@Result"].Value.ToString();
 
-                result = true;
+                if (spResult == string.Empty)
+                    spResult = "Inserimento worker RIUSCITO";
+                result = !string.IsNullOrEmpty(spResult) ? true : false;
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine("Erorre SQL:" + sqlEx.Message);
+                Console.WriteLine("Errore SQL:" + sqlEx.Message);
 
             }
             catch (Exception ex)
             {
 
-                Console.WriteLine("Erorre generico:" + ex.Message);
+                Console.WriteLine("Errore generico:" + ex.Message);
             }
             finally { CheckDbClose(); }
-            return result;
+            return spResult;
+        }
+        public string spInsertWorkerFull(Worker worker)
+        {
+            bool result = false;
+            string spResult = string.Empty;
+            try
+            {
+                CheckDbOpen();
+
+                _command = new SqlCommand
+                {
+                    CommandText = "spInsertWorker",
+                    CommandType = CommandType.StoredProcedure,
+                    Connection = _connection
+                };
+
+                _command.Parameters.AddWithValue("@Matricola", worker.Matricola);
+                _command.Parameters.AddWithValue("@FullName", worker.FullName);
+                _command.Parameters.AddWithValue("@Role", worker.Role);
+                _command.Parameters.AddWithValue("@Department", worker.Department);
+                _command.Parameters.AddWithValue("@Address", worker.Address);
+                _command.Parameters.AddWithValue("@Age", worker.Age);
+                _command.Parameters.AddWithValue("@Cap", worker.Cap);
+                _command.Parameters.AddWithValue("@City", worker.City);
+                _command.Parameters.AddWithValue("@Phone", worker.Phone);
+                _command.Parameters.AddWithValue("@Province", worker.Province);
+                _command.Parameters.Add(new SqlParameter("@Result", SqlDbType.NVarChar, 200)).Direction =
+                    ParameterDirection.Output;
+
+                _command.ExecuteNonQuery();
+                spResult = _command.Parameters["@Result"].Value.ToString();
+
+                if (spResult == string.Empty)
+                    spResult = "Inserimento tutti worker RIUSCITO";
+                result = !string.IsNullOrEmpty(spResult) ? true : false;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Errore SQL:" + sqlEx.Message);
+
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("Errore generico:" + ex.Message);
+            }
+            finally { CheckDbClose(); }
+            return spResult;
         }
 
         public bool UpdateWorker(string matricola, string department)
@@ -271,17 +326,140 @@ namespace StartAcademy7.BLogic
             }
             catch (SqlException SqlEx)
             {
-                Console.WriteLine("Erorre SQL:"+SqlEx.Message);
+                Console.WriteLine("Errore SQL:" + SqlEx.Message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erorre generico:" + ex.Message);
+                Console.WriteLine("Errore generico:" + ex.Message);
             }
             finally
             {
                 CheckDbClose();
             }
             return true;
+        }
+
+        public string DeleteDbWorker(string matricola)
+        {
+            //Sicuramente try catch
+            //Check stato connessione
+            //Command da inizializzare ma per via della relazione tra worker e weekwork
+            //prima con il command elimino gli eventuali figli su weekwors,
+            //poi stessa operazione , occhio ai valodi di command text, su worker se 
+            //non salta nel catch, result = true altrimenti false e visualizza l'ecezione
+            //mi sembra una doppia delete semplice, quindi lo farei anche da codice,
+            //tipo: DELECT FROM WEEKWORKS WHERE ENROLLMENT = @MATRICOLA
+            //Occhio alla definizione parametri SQL
+
+            bool result = false;
+            string spResult = string.Empty;
+            try
+            {
+                CheckDbOpen();
+
+                _command = new SqlCommand
+                {
+                    CommandText = "spDeleteWorker",
+                    CommandType = CommandType.StoredProcedure,
+                    Connection = _connection
+                };
+
+                _command.Parameters.AddWithValue("@Matricola", matricola);
+                _command.Parameters.Add(new SqlParameter("@Result", SqlDbType.NVarChar, 200)).Direction =
+                    ParameterDirection.Output;
+
+                _command.ExecuteNonQuery();
+                spResult = _command.Parameters["@Result"].Value.ToString();
+
+                if (spResult == string.Empty)
+                    spResult = "Cancellazione worker e relativi weekwork RIUSCITO";
+                result = !string.IsNullOrEmpty(spResult) ? true : false;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Errore SQL:" + sqlEx.Message);
+
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("Errore generico:" + ex.Message);
+            }
+            finally { CheckDbClose(); }
+            return spResult;
+
+        }
+
+
+
+        public void PopulateAcademy7Tables(List<Worker> workers)
+        {
+            foreach (Worker worker in workers)
+            {
+                spInsertWorkerFull(worker);
+            }
+            PopulateWeekwork(workers);
+
+        }
+
+        public void InsertAllWeekwork(List<Weekwork> weekworks)
+        {
+            foreach (Weekwork weekwork in weekworks)
+                spInsertWeekwork(weekwork);
+        }
+
+        public string spInsertWeekwork(Weekwork work)
+        {
+            bool result = false;
+            string spResult = string.Empty;
+            try
+            {
+                CheckDbOpen();
+
+                _command = new SqlCommand
+                {
+                    CommandText = "spInsertWeekwork",
+                    CommandType = CommandType.StoredProcedure,
+                    Connection = _connection
+                };
+
+                _command.Parameters.AddWithValue("@EnrollmentFather", work.EnrollementFather);
+                _command.Parameters.AddWithValue("@WorkDate", work.WorkDate);
+                _command.Parameters.AddWithValue("@Activity", work.Activity);
+
+                _command.Parameters.Add(new SqlParameter("@Result", SqlDbType.NVarChar, 200))
+                    .Direction = ParameterDirection.Output;
+
+                _command.ExecuteNonQuery();
+                spResult = _command.Parameters["@Result"].Value.ToString();
+
+                if (string.IsNullOrEmpty(spResult))
+                    spResult = "Inserimento Weekwork RIUSCITO";
+
+                result = !string.IsNullOrEmpty(spResult);
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Errore SQL: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Errore generico: " + ex.Message);
+            }
+            finally
+            {
+                CheckDbClose();
+            }
+            return spResult;
+
+        }
+
+        public void PopulateWeekwork(List<Worker> workers)
+        {
+            foreach (Worker worker in workers)
+            {
+                InsertAllWeekwork(worker.Weekworks);
+            }
         }
 
     }
