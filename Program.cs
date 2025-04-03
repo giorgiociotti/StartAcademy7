@@ -216,10 +216,10 @@ namespace StartAcademy7
 
             //DA QUI ESERCIZIO DATABASE
             //employeesHandler.Workers
-            if (dbManager.IsDbOnline) { 
+            if (dbManager.IsDbOnline) {
                 //dbManager.PopulateAcademy7Tables(employeesHandler.Workers);
-                dbManager.UpdateWeekWork(5, "I001", "2025-04-02", "aaaaaaaa");
-
+                //dbManager.UpdateWeekWork(5, "I001", "2025-04-02", "aaaaaaaa");
+                dbManager.spReadWeekwork(Activity: "").ForEach(w => Console.WriteLine($"ID: {w.Id} - Enroll: {w.EnrollementFather} - Date: {w.WorkDate.Day}/{w.WorkDate.Month}/{w.WorkDate.Year} - Activity: {w.Activity}"));
             }
 
 

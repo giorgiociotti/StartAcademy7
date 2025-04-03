@@ -341,22 +341,18 @@ namespace StartAcademy7.BLogic
 
         public string DeleteDbWorker(string matricola)
         {
-            //Sicuramente try catch
-            //Check stato connessione
-            //Command da inizializzare ma per via della relazione tra worker e weekwork
-            //prima con il command elimino gli eventuali figli su weekwors,
-            //poi stessa operazione , occhio ai valodi di command text, su worker se 
-            //non salta nel catch, result = true altrimenti false e visualizza l'ecezione
-            //mi sembra una doppia delete semplice, quindi lo farei anche da codice,
-            //tipo: DELECT FROM WEEKWORKS WHERE ENROLLMENT = @MATRICOLA
-            //Occhio alla definizione parametri SQL
-
-            bool result = false;
             string spResult = string.Empty;
             try
             {
                 CheckDbOpen();
-
+                _command = new SqlCommand("SELECT COUNT(*) AS TotaleDipendenti FROM [AcademyNet7].[dbo].[Worker] WHERE Matricola = @Matricola", _connection);
+                _command.Parameters.AddWithValue("@Matricola", matricola);
+                int totalWorkers = (int)_command.ExecuteScalar();
+                if (totalWorkers == 0)
+                {
+                    CheckDbClose();
+                    return $"Non esiste un dipendente con la matricola {matricola}!";
+                }
                 _command = new SqlCommand
                 {
                     CommandText = "spDeleteWorker",
@@ -371,9 +367,10 @@ namespace StartAcademy7.BLogic
                 _command.ExecuteNonQuery();
                 spResult = _command.Parameters["@Result"].Value.ToString();
 
+
+
                 if (spResult == string.Empty)
                     spResult = "Cancellazione worker e relativi weekwork RIUSCITO";
-                result = !string.IsNullOrEmpty(spResult) ? true : false;
             }
             catch (SqlException sqlEx)
             {
@@ -462,27 +459,36 @@ namespace StartAcademy7.BLogic
             }
         }
 
-        //cancella un elemento di weekwork
-        public void DeleteWeekWork(Weekwork weekwor)
+        public string DeleteWeekWorkFull(string EnrollementFather, string Workdate, string Activity)
         {
-            bool result = false;
             string spResult = string.Empty;
             try
             {
                 CheckDbOpen();
-
+                _command = new SqlCommand("SELECT COUNT(*) AS TotaleDate FROM [AcademyNet7].[dbo].[WeekWork] WHERE EnrollmentFather = @EnrollmentFather AND WorkDate = @WorkDate AND Activity = @Activity", _connection);
+                _command.Parameters.AddWithValue("@EnrollmentFather", EnrollementFather);
+                _command.Parameters.AddWithValue("@WorkDate", Workdate);
+                _command.Parameters.AddWithValue("@Activity", Activity);
+                int totalWorkers = (int)_command.ExecuteScalar();
+                if (totalWorkers == 0)
+                {
+                    CheckDbClose();
+                    return $"Non esiste nessuna attività {Activity} del dipendente {EnrollementFather} il {Workdate}!";
+                }
                 _command = new SqlCommand
                 {
-                    CommandText = "DELETE FROM [Weekwork] WHERE EnrollmentFather = @EnrollmentFather AND WorkDate = @WorkDate",
+                    CommandText = "DELETE FROM [Weekwork] WHERE EnrollmentFather = @EnrollmentFather AND WorkDate = @WorkDate AND Activity = @Activity",
                     Connection = _connection
                 };
 
-                _command.Parameters.AddWithValue("@EnrollmentFather", weekwor.EnrollementFather);
-                _command.Parameters.AddWithValue("@WorkDate", weekwor.WorkDate);
+                _command.Parameters.AddWithValue("@EnrollmentFather", EnrollementFather);
+                _command.Parameters.AddWithValue("@WorkDate", Workdate);
+                _command.Parameters.AddWithValue("@Activity", Activity);
 
                 _command.ExecuteNonQuery();
-                spResult = "Cancellazione Weekwork RIUSCITO";
-                result = true;
+                if (spResult == string.Empty)
+                    spResult = "Cancellazione Weekwork RIUSCITO";
+
             }
             catch (SqlException sqlEx)
             {
@@ -498,8 +504,54 @@ namespace StartAcademy7.BLogic
             {
                 CheckDbClose();
             }
-            Console.WriteLine(spResult);
+            return spResult;
         }
+
+        public string DeleteWeekWorkByID(int ID)
+        {
+            string spResult = string.Empty;
+            try
+            {
+                CheckDbOpen();
+                _command = new SqlCommand("SELECT COUNT(*) AS TotaleDate FROM [AcademyNet7].[dbo].[WeekWork] WHERE ID = @ID", _connection);
+                _command.Parameters.AddWithValue("@ID", ID);
+
+                int totalWorkers = (int)_command.ExecuteScalar();
+                if (totalWorkers == 0)
+                {
+                    CheckDbClose();
+                    return $"Non esiste nessuna attività con ID {ID}!";
+                }
+                _command = new SqlCommand
+                {
+                    CommandText = "DELETE FROM [Weekwork] WHERE ID = @ID",
+                    Connection = _connection
+                };
+
+                _command.Parameters.AddWithValue("@ID", ID);
+
+                _command.ExecuteNonQuery();
+                if (spResult == string.Empty)
+                    spResult = "Cancellazione Weekwork RIUSCITO";
+
+            }
+            catch (SqlException sqlEx)
+            {
+                spResult = "Errore SQL: " + sqlEx.Message;
+                Console.WriteLine(spResult);
+            }
+            catch (Exception ex)
+            {
+                spResult = "Errore generico: " + ex.Message;
+                Console.WriteLine(spResult);
+            }
+            finally
+            {
+                CheckDbClose();
+            }
+            return spResult;
+        }
+
 
         //updateWeekwork
         public string UpdateWeekWork(int id,string enrollementFather, string? workDate=null, string? activity=null)
@@ -546,6 +598,139 @@ namespace StartAcademy7.BLogic
         }
 
 
+        public string spUpdateWorkerFull(string matricola, string? fullName = null, string? role = null, string? department = null, int? age = null, string? address = null, string? city = null, string? province = null, string? cap = null, string? phone = null)
+        {
+            string spResult = string.Empty;
+            try
+            {
+                CheckDbOpen();
+
+                _command = new SqlCommand
+                {
+                    CommandText = "spUpdateWorker",
+                    CommandType = CommandType.StoredProcedure,
+                    Connection = _connection
+                };
+
+                _command.Parameters.AddWithValue("@Matricola", matricola);
+                _command.Parameters.AddWithValue("@FullName", fullName);
+                _command.Parameters.AddWithValue("@Role", role);
+                _command.Parameters.AddWithValue("@Department", department);
+                _command.Parameters.AddWithValue("@Address", address);
+                _command.Parameters.AddWithValue("@Age", age);
+                _command.Parameters.AddWithValue("@Cap", cap);
+                _command.Parameters.AddWithValue("@City", city);
+                _command.Parameters.AddWithValue("@Phone", phone);
+                _command.Parameters.AddWithValue("@Province", province);
+                _command.Parameters.Add(new SqlParameter("@Result", SqlDbType.NVarChar, 200)).Direction =
+                    ParameterDirection.Output;
+
+                _command.ExecuteNonQuery();
+                spResult = _command.Parameters["@Result"].Value.ToString();
+
+                if (spResult == string.Empty)
+                    spResult = $"Modifica Worker {matricola} riuscita";
+
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Errore SQL:" + sqlEx.Message);
+
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("Errore generico:" + ex.Message);
+            }
+            finally { CheckDbClose(); }
+            return spResult;
+        }
+        public string UpdateWeekWork(Weekwork weekwork)
+        {
+            string spResult = string.Empty;
+            bool result = false;
+            try
+            {
+                CheckDbOpen();
+
+                _command = new SqlCommand
+                {
+                    CommandText = "spUpdateWeekwork",
+                    CommandType = CommandType.StoredProcedure,
+                    Connection = _connection
+                };
+
+                _command.Parameters.AddWithValue("@EnrollmentFather", weekwork.EnrollementFather);
+                _command.Parameters.AddWithValue("@WorkDate", weekwork.WorkDate);
+                _command.Parameters.AddWithValue("@NewActivity", weekwork.Activity);
+                _command.Parameters.Add(new SqlParameter("@Result", SqlDbType.NVarChar, 200)).Direction = ParameterDirection.Output;
+
+                _command.ExecuteNonQuery();
+                spResult = _command.Parameters["@Result"].Value.ToString();
+
+                if (string.IsNullOrEmpty(spResult))
+                    spResult = "Update Weekwork RIUSCITO";
+
+                result = !string.IsNullOrEmpty(spResult);
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("Errore SQL: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Errore generico: " + ex.Message);
+            }
+            finally
+            {
+                CheckDbClose();
+            }
+            return spResult;
+        }
+
+        public List<Weekwork> spReadWeekwork(int? ID = null, string? Workdate = null, string? Activity = null, string? EnrollementFather = null)
+        {
+            string spResult = string.Empty;
+            List<Weekwork> weekwork = [];
+            try
+            {
+                CheckDbOpen();
+
+                _command = new SqlCommand
+                {
+                    CommandText = "dbo.spReadWeekwork",
+                    CommandType = CommandType.StoredProcedure,
+                    Connection = _connection
+                };
+                _command.Parameters.AddWithValue("@id", ID);
+                _command.Parameters.AddWithValue("@EnrollementFather", EnrollementFather);
+                _command.Parameters.AddWithValue("@WorkDate", Workdate);
+                _command.Parameters.AddWithValue("@Activity", Activity);
+
+                SqlDataReader dataReader = _command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    weekwork.Add(new Weekwork
+                    {
+                        Id = Convert.ToInt32(dataReader["id"].ToString()),
+                        EnrollementFather = dataReader["EnrollementFather"].ToString(),
+                        WorkDate = (DateTime)dataReader["WorkDate"],
+                        Activity = dataReader["Activity"].ToString()
+                    });
+                }
+                dataReader.Close();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            finally
+            {
+                CheckDbClose();
+            }
+            return weekwork;
+        }
 
     }
 }
